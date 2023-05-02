@@ -3,7 +3,7 @@ orbs:
   node: circleci/node@5.0.2
 
 jobs:
-  build_and_test:
+  build:
     executor: node/default
     steps:
       - checkout
@@ -17,6 +17,6 @@ jobs:
           paths:
             - .
 workflows:
-  test_my_app:
+  build_my_app:
     jobs:
-      - build_and_test
+      - build
