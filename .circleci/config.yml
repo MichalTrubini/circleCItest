@@ -1,0 +1,19 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.1.0
+jobs:
+  build:
+    executor:
+      name: node/default
+      tag: '14.17.6'
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run: npm install
+            - run: npm test
+workflows:
+  version: 2.1
+  build-deploy:
+    jobs:
+      - build
