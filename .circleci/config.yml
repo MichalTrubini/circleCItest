@@ -19,8 +19,6 @@ jobs:
   deploy:
     docker:
       - image: google/cloud-sdk
-    requires: 
-      - build
     steps:
       - checkout
       - attach_workspace:
@@ -40,4 +38,6 @@ workflows:
   build_my_app:
     jobs:
       - build
-      - deploy
+      - deploy:
+          requires:
+            - build
