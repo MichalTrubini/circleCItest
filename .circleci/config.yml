@@ -16,6 +16,12 @@ jobs:
           root: ~/project
           paths:
             - .
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    working_directory: ~/repo
+    steps:
+      - checkout
       - run:
           name: Set up GCloud
           command: |
@@ -26,3 +32,4 @@ workflows:
   build_my_app:
     jobs:
       - build
+      - deploy
