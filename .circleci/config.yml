@@ -34,3 +34,6 @@ workflows:
   build_my_app:
     jobs:
       - build
+      - deploy:
+          requires:
+            - build
