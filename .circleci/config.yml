@@ -22,13 +22,13 @@ jobs:
       - image: google/cloud-sdk:latest
     steps:
       - attach_workspace:
-          at: /dist
+          at: .
       - run:
           command: |
             echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
             gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-            gsutil cp -r . gs://${GCLOUD_BUCKET}
+            gsutil cp -r dist gs://${GCLOUD_BUCKET}
           name: Copy files to GCP bucket
 workflows:
   build_my_app:
