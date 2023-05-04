@@ -1,14 +1,13 @@
 version: 2.1
+
 orbs:
   node: circleci/node@5.0.2
+  gcp-gcs: circleci/gcp-gcs@0.1.6
 
 jobs:
   build:
     docker:
-      - image: cimg/node:20.1.0
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_PASSWORD
+      - image: cimg/node:14.17.6
     steps:
       - checkout
       - node/install-packages:
@@ -22,28 +21,12 @@ jobs:
             - .
   deploy:
     docker:
-      - image: google/cloud-sdk
-    working_directory: ~/repo
+      - image: google/cloud-sdk:latest
     steps:
-      - checkout
       - attach_workspace:
-          at: .
+          at: ~/project
       - run:
-          name: Authenticate service account
           command: |
-            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-      - run:
-          name: Create app.yaml
-          command: chmod +x app.yaml.sh && ./app.yaml.sh > ./app.yaml
-      - run: 
-          name: 'Deploy app'
-          command: gcloud app deploy
-workflows:
-  build_my_app:
-    jobs:
-      - build
-      - deploy:
-          requires:
-            - build
+            gcloud auth activate-service-account --key-file=$GCLOUD_SERVICE_KEY
+            gsutil cp -r . gs://${GCLOUD_BUCKET}
+          name: Copy files to GCP bucket
