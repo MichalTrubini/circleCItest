@@ -4,7 +4,11 @@ orbs:
 
 jobs:
   build:
-    executor: node/default
+    docker:
+      - image: circleci/node:latest
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
       - node/install-packages:
