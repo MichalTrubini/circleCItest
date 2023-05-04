@@ -17,6 +17,7 @@ jobs:
           root: ~/project
           paths:
             - .
+      - run: ls -R $CIRCLE_WORKING_DIRECTORY
   deploy:
     docker:
       - image: google/cloud-sdk:latest
@@ -34,6 +35,3 @@ workflows:
   build_my_app:
     jobs:
       - build
-      - deploy:
-          requires:
-            - build
