@@ -8,22 +8,21 @@ jobs:
       - image: cimg/node:20.1.0
     steps:
       - checkout
-      - run: mkdir -p workspace
       - node/install-packages:
           pkg-manager: npm
       - run:
           command: npm run build
           name: Build app
       - persist_to_workspace:
-          root: workspace
+          root: ~/project
           paths:
-            - output
+            - .
   deploy:
     docker:
       - image: google/cloud-sdk:latest
     steps:
       - attach_workspace:
-          at: /tmp/workspace/output
+          at: /dist
       - run:
           command: |
             echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
